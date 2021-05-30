@@ -1,50 +1,38 @@
-import {StatusBar} from "expo-status-bar";
-import React, {  useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  setLoading,
-} from "react-native";
-
 export default function App() {
   const [loading, setLoading] = useState(true);
-  const [arrival, setArrival] = useState("");
   const BUSSTOP_URL = "https://arrivelah2.busrouter.sg/?id=83139";
+  const [arrival, setArrival] = useState("");
 
   function loadBusStopData() {
     setLoading(true)
     fetch(BUSSTOP_URL)
-      .then((response) => {
-        return response.json();
+      .then((Response) => {
+        console.log(response.json)
+        return Response.json();
       })
-      .then((responseData) => {
-        const myBus = responseData.services.filter(
+      .then((responsed) => {
+        console.log("Original Data");
+
+        const myBus = ResponseData.services.filter(
           (item) => item.no === "155"
         )[0];
-        console.log("My Bus Data");
-        console.log(myBus);
-        setArrival(myBus.next.time);
-        setloading(false);
+        setArrival(myBus.next.time)
+        setloading(false)
       });
   }
 
   useEffect(() => {
-    const interval = setInterval(loadBusStopData, 1000);
-    return () => clearInterval(interval);
+    const interval = setInterval(loadBusStopData, 5000);
+    return () => clearInterval(interval)
   }, []);
-
-  function refreshBusStopData() {}
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Bus Arrival Time:</Text>
       <Text style={styles.textTime}>
-        {loading ? <ActivityIndicator size="large" /> : arrival}
+        {loading ? <ActivityIndicator size="large" /> : "Loaded"}
       </Text>
-      <TouchableOpacity style={styles.button} onPress={refreshBusStopData}>
+      <TouchableOpacity style={styles.button}>
         <Text style={styles.textButton}>Refresh</Text>
       </TouchableOpacity>
     </View>
